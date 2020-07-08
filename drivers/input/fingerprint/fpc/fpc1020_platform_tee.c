@@ -532,7 +532,10 @@ static ssize_t compatible_all_set(struct device *dev,
 		dev_dbg(dev, "requested irq %d\n", gpio_to_irq(fpc1020->irq_gpio));
 
 		/* Request that the interrupt should be wakeable */
-		enable_irq_wake(gpio_to_irq(fpc1020->irq_gpio));
+		if (of_property_read_bool(dev->of_node, "fpc,enable-wakeup")) {
+			enable_irq_wake(gpio_to_irq(fpc1020->irq_gpio));
+		}
+
 		fpc1020->compatible_enabled = 1;
 		if (of_property_read_bool(dev->of_node, "fpc,enable-on-boot")) {
 			dev_info(dev, "Enabling hardware\n");
